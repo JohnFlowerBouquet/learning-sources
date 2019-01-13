@@ -1,0 +1,24 @@
+[
+	{
+        "title": "freeCodeCamp - Online Bootcamp",
+        "link": "https://www.freecodecamp.org/",
+        "category": "Courses",
+        "technology": ["JavaScript", "HTML", "CSS"],
+        "year": "Update"
+      },
+      {
+        "title": "javascriptissexy.com - Object Oriented JavaScript",
+        "link":
+          "http://javascriptissexy.com/oop-in-javascript-what-you-need-to-know/",
+        "category": "Article",
+        "technology": ["JavaScript"],
+        "year": "2013/03"
+      },
+      {
+        "title": "Traversy Media - JavaScript BookList App | No Frameworks",
+        "link": "https://www.youtube.com/watch?v=JaMCxVWtW58",
+        "category": "Video",
+        "technology": ["JavaScript"],
+        "year": "2018/12"
+      }
+]
