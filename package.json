@@ -1,0 +1,43 @@
+{
+  "name": "learning-sources",
+  "version": "1.0.0",
+  "description": "Free Learning Sources List",
+  "main": "index.js",
+  "scripts": {
+    "sass": "node-sass -w scss/ -o dist/css/ --recursive"
+  },
+  "author": "John Flower Bouquet",
+  "license": "MIT",
+  "dependencies": {
+    "node-sass": "^4.11.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
+    "babelify": "^10.0.0",
+    "browser-sync": "^2.26.3",
+    "browserify": "^16.2.3",
+    "gulp": "^4.0.0",
+    "gulp-autoprefixer": "^6.0.0",
+    "gulp-plumber": "^1.2.1",
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-sourcemaps": "^2.6.4",
+    "gulp-uglify": "^3.0.1",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JohnFlowerBouquet/learning-sources.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JohnFlowerBouquet/learning-sources/issues"
+  },
+  "homepage": "https://github.com/JohnFlowerBouquet/learning-sources#readme"
+}
