@@ -1,6 +1,7 @@
 //Entry Class
-var entries = [];
+var entriesGlobal;
 function getList() {
+  var entries = [];
   const endpoint =
     "https://raw.githubusercontent.com/JohnFlowerBouquet/learning-sources/master/sources.json";
   fetch(endpoint)
@@ -12,6 +13,9 @@ function getList() {
     .catch(function(error) {
       console.log(error);
     });
+  console.log("Fetch");
+  entriesGlobal = entries;
+  return entries;
 }
 
 class Entry {
@@ -27,7 +31,7 @@ class Entry {
 //UI Class
 class UI {
   static displayResults() {
-    const results = getList();
+    const results = Store.getEntries();
     results.forEach(result => UI.addEntryToList(result));
   }
 
@@ -59,12 +63,11 @@ class UI {
 
   static showAlert(message, className) {
     const div = document.createElement("div");
-    div.className = `alert alert-${className}`;
+    div.className = `alert alert-${className} mt-4`;
     div.appendChild(document.createTextNode(message));
     const container = document.querySelector(".container");
     const form = document.querySelector("#list-form");
-    container.insertBefore(div, form);
-
+    form.appendChild(div);
     setTimeout(() => document.querySelector(".alert").remove(), 3000);
   }
 
@@ -79,17 +82,21 @@ class UI {
 //Store Class
 class Store {
   static getEntries() {
-    let entries = getList();
+    var entries;
+    if (entriesGlobal) {
+      return entriesGlobal;
+    } else {
+      entries = getList();
+    }
     return entries;
   }
 
   static addEntry(entry) {
-    entries.push(entry);
+    entriesGlobal.push(entry);
   }
 
   static removeEntry(title) {
     const entries = Store.getEntries();
-
     entries.forEach((entry, index) => {
       if (entry.title === title) {
         entries.splice(index, 1);
@@ -114,7 +121,7 @@ document.querySelector("#list-form").addEventListener("submit", e => {
     UI.showAlert("Please fill in all fields corectly", "danger");
   } else {
     const entry = new Entry(title, link, category, technology, year);
-    entries.push(entry);
+    entriesGlobal.push(entry);
 
     UI.addEntryToList(entry);
 
@@ -135,10 +142,11 @@ document.querySelector("#list-show").addEventListener("click", e => {
   UI.showAlert("Entry Removed", "succes");
 });
 
+//Save JSON
 function saveJSON() {
   const data =
     "data:text/json;charset=utf-8," +
-    encodeURIComponent(JSON.stringify(entries));
+    encodeURIComponent(JSON.stringify(entriesGlobal));
   var downloadAnchorNode = document.createElement("a");
   downloadAnchorNode.setAttribute("href", data);
   downloadAnchorNode.setAttribute("download", "sources" + ".json");

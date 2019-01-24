@@ -18,7 +18,7 @@
   <body class="mw-100">
     <header class="header">
       <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Local - Learning Sources</a>
+        <a class="navbar-brand" href="#">Learning Sources</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -38,20 +38,18 @@
               type="text"
               placeholder="Search"
             />
-            <button class="btn btn-secondary my-2 my-sm-0" type="submit">
-              Search
-            </button>
+            <button class="btn btn-secondary m-2" type="submit">Search</button>
           </form>
           <button
             type="button"
-            class="btn btn-primary"
+            class="btn btn-primary m-2"
             data-toggle="modal"
             data-target="#addEntry"
           >
-            +Add
+            +Add Entry
           </button>
-          <button type="button" id="saveJSON" class="btn btn-primary">
-            Large button
+          <button type="button" id="saveJSON" class="btn btn-primary m-2">
+            Download JSON
           </button>
         </div>
       </nav>
@@ -134,11 +132,11 @@
         </div>
       </div>
     </div>
-    <main class="container w-100 mt-5">
+    <main class="container w-100 mt-5 pt-5">
       <table class="table table-hover w-100">
         <thead>
           <tr>
-            <th scope="col">Title</th>
+            <th class="col" scope="col">Title</th>
             <th scope="col">Category</th>
             <th scope="col">Technologies</th>
             <th scope="col">Year</th>
@@ -162,6 +160,22 @@
               >
                 Delete
               </button>
+            </td>
+          </tr>
+          <tr
+            data-toggle="collapse"
+            data-target="#accordion"
+            class="table-dark clickable"
+          >
+            <td>
+              <a href="https://www.freecodecamp.org/"
+                >freeCodeCamp - Online Bootcamp</a
+              >
+              <div id="accordion" class="collapse">
+                <p>Category:</p>
+                <p>Technologies:</p>
+                <p>Year:</p>
+              </div>
             </td>
           </tr>
         </tbody>
