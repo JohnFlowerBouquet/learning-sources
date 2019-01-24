@@ -1,5 +1,7 @@
 # learning-sources
 <a href="https://johnflowerbouquet.github.io/learning-sources/dist/index.html"><img src="https://github.com/JohnFlowerBouquet/JohnFlowerBouquet.github.io/blob/master/img/projects/project3.jpg" title="learning-sources" alt="learning sources"></a>
+
+
 Simple page for viewing free knowledge sources from around the web that I used during my journey to become front-end developer!
 
 ### Future plans
