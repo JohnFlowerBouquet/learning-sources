@@ -15,7 +15,7 @@
     <title>Jan Szczepański Learning Sources</title>
   </head>
 
-  <body class="mw-100">
+  <body class="vh-100">
     <header class="header">
       <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
         <a class="navbar-brand" href="#">Learning Sources</a>
@@ -32,8 +32,9 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarColor02">
-          <form class="form-inline my-2 my-lg-0">
+          <form id="search-form" class="form-inline my-2 my-lg-0">
             <input
+              id="search-input"
               class="form-control mr-sm-2"
               type="text"
               placeholder="Search"
@@ -132,10 +133,12 @@
         </div>
       </div>
     </div>
-    <main class="container w-100 mt-5 pt-5">
-      <table class="table table-hover w-100">
+
+    <main class="container-fluid mh-100 h-100 pt-5">
+      <table class="table table-hover container-fluid h-75 mt-5">
         <thead>
-          <tr>
+          <tr class="table-header d-none d-md-table-row">
+            <!-- dodać media querries-->
             <th class="col" scope="col">Title</th>
             <th scope="col">Category</th>
             <th scope="col">Technologies</th>
@@ -180,6 +183,17 @@
           </tr>
         </tbody>
       </table>
+      <div class="d-flex justify-content-center align-items-center">
+        <ul class="pagination" id="pagination">
+          <li class="page-item disabled">
+            <a class="page-link" href="#">&laquo;</a>
+          </li>
+          <!--<li class="page-item active"><button class="page-link">1</button></li>-->
+          <li class="page-item disabled">
+            <a class="page-link" href="#">&raquo;</a>
+          </li>
+        </ul>
+      </div>
     </main>
     <footer class="footer">
       <p>jan.szczepanski@protonmail.com</p>

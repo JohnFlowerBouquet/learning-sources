@@ -28,20 +28,6 @@
     "year": "2016/12"
   },
   {
-    "title": "JavaScript30",
-    "link": "https://javascript30.com/",
-    "category": "Course",
-    "technology": "JavaScript",
-    "year": "2016/12"
-  },
-  {
-    "title": "codeacademy.com",
-    "link": "https://www.codecademy.com/learn",
-    "category": "Course",
-    "technology": "JavaScript,HTML,CSS",
-    "year": "Updated"
-  },
-  {
     "title": "codeacademy.com",
     "link": "https://www.codecademy.com/learn",
     "category": "Course",
@@ -56,32 +42,11 @@
     "year": "2018/12"
   },
   {
-    "title": "Eloquent  JavaScript",
-    "link": "http://eloquentjavascript.net/index.html",
-    "category": "Book",
-    "technology": "JavaScript",
-    "year": "2018/12"
-  },
-  {
     "title": "Programming 101",
     "link": "https://www.udemy.com/programming-101/",
     "category": "Course",
     "technology": "Computer Science",
     "year": "2017/9"
-  },
-  {
-    "title": "Programming 101",
-    "link": "https://www.udemy.com/programming-101/",
-    "category": "Course",
-    "technology": "Computer Science",
-    "year": "2017/9"
-  },
-  {
-    "title": "JavaScript Essentials",
-    "link": "https://www.udemy.com/javascript-essentials/",
-    "category": "Course",
-    "technology": "JavaScript",
-    "year": "2017/12"
   },
   {
     "title": "JavaScript Essentials",

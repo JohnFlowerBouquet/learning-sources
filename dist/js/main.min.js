@@ -7,13 +7,12 @@ function getList() {
   fetch(endpoint)
     .then(response => response.json())
     .then(data => {
-      data.forEach(result => UI.addEntryToList(result));
       entries.push(...data);
+      UI.displayResults(data);
     })
     .catch(function(error) {
       console.log(error);
     });
-  console.log("Fetch");
   entriesGlobal = entries;
   return entries;
 }
@@ -30,31 +29,92 @@ class Entry {
 
 //UI Class
 class UI {
-  static displayResults() {
-    const results = Store.getEntries();
-    results.forEach(result => UI.addEntryToList(result));
+  static displayResults(results) {
+    var resultNumber = results.length;
+    var pageIndex = 1;
+    document.querySelectorAll(".removable").forEach(el => el.remove());
+    if (resultNumber > 0) {
+      var spliced = [[]];
+      while (resultNumber > 0) {
+        var chunk = results.splice(0, 5);
+        spliced.push(chunk);
+        const liElement = document.createElement("li");
+        liElement.className = "page-item removable";
+        const pageButton = document.createElement("button");
+        pageButton.className = "page-link";
+        pageButton.dataset.pageNumber = pageIndex;
+        pageButton.textContent = pageIndex;
+        pageButton.addEventListener("click", function() {
+          UI.displayList(spliced[this.dataset.pageNumber]);
+        });
+        liElement.appendChild(pageButton);
+        pagination.insertBefore(liElement, pagination.lastElementChild);
+        resultNumber = results.length;
+        pageIndex++;
+      }
+      UI.displayList(spliced[1]);
+    } else {
+      UI.displayList(results);
+    }
+  }
+  static findMatches(wordToMatch) {
+    listShow.innerHTML = "";
+    return Store.getEntries().filter(entry => {
+      const regex = new RegExp(wordToMatch, "gi");
+      return entry.title.match(regex) || entry.category.match(regex);
+    });
+  }
+  static displayList(listToShow) {
+    const list = document.querySelector("#list-show");
+    if (window.innerWidth > 768) {
+      const listTemplate = Array.from(listToShow)
+        .map(entry => {
+          return `
+      <tr class="table-dark">
+        <td>
+          <a href="${entry.link}">${entry.title}</a>
+        </td>
+        <td>${entry.category}</td>
+        <td>${entry.technology}</td>
+        <td>${entry.year}</td>
+        <td>
+          <button type="button" id="list-edit" class="badge badge-danger">
+            Edit
+          </button>
+          <button
+            type="button"
+            id="list-delete"
+            class="badge badge-danger delete"
+          >
+            Delete
+          </button>
+        </td>
+      </tr>`;
+        })
+        .join("");
+      list.innerHTML = listTemplate;
+    } else {
+      const listTemplate = Array.from(listToShow)
+        .map((entry, index) => {
+          return `
+          <tr data-toggle="collapse" data-target="#accordion${index}" class="table-dark clickable">
+            <td>
+              <a href="${entry.link}">${entry.title}</a>
+              <div id="accordion${index}" class="collapse">
+                <p>Category: ${entry.category}</p>
+                <p>Technologies: ${entry.technology}</p>
+                <p>Year: ${entry.year}</p>
+                <button type="button" id="list-edit" class="badge badge-danger">Edit</button>
+                <button type="button" id="list-delete" class="badge badge-danger delete">Delete</button>
+              </div>
+            </td>
+          </tr>`;
+        })
+        .join("");
+      list.innerHTML = listTemplate;
+    }
   }
 
-  static addEntryToList(entry) {
-    const list = document.querySelector("#list-show");
-    const row = document.createElement("tr");
-    row.className = "table-dark";
-    row.innerHTML = `
-            <td><a href="${entry.link}">${entry.title}</a></td>
-            <td>${entry.category}</td>
-            <td>${entry.technology}</td>
-            <td>${entry.year}</td>
-            <td>
-              <button type="button" id="list-edit" class="badge badge-danger">
-                Edit
-              </button>
-              <button type="button" id="list-delete" class="badge badge-danger delete">
-                Delete
-              </button>
-            </td>
-        `;
-    list.appendChild(row);
-  }
   static deleteEntry(entry) {
     if (entry.classList.contains("delete")) {
       entry.parentElement.parentElement.remove();
@@ -65,7 +125,6 @@ class UI {
     const div = document.createElement("div");
     div.className = `alert alert-${className} mt-4`;
     div.appendChild(document.createTextNode(message));
-    const container = document.querySelector(".container");
     const form = document.querySelector("#list-form");
     form.appendChild(div);
     setTimeout(() => document.querySelector(".alert").remove(), 3000);
@@ -84,8 +143,10 @@ class Store {
   static getEntries() {
     var entries;
     if (entriesGlobal) {
+      console.log("local");
       return entriesGlobal;
     } else {
+      console.log("fetch");
       entries = getList();
     }
     return entries;
@@ -104,12 +165,25 @@ class Store {
     });
   }
 }
+//OnLoad
+document.addEventListener("DOMContentLoaded", () =>
+  UI.displayResults(Store.getEntries())
+);
+const listShow = document.querySelector("#list-show");
+const pagination = document.querySelector("#pagination");
+
 //Event: Display Search Results
-//document.addEventListener("DOMContentLoaded", UI.displayResults);
-document.addEventListener("DOMContentLoaded", getList);
+const searchForm = document.querySelector("#search-form");
+searchForm.addEventListener("submit", e => {
+  e.preventDefault();
+  const searchInput = document.querySelector("#search-input").value;
+  UI.displayResults(UI.findMatches(searchInput));
+});
+
 //Event: Add Entry
 document.querySelector("#list-form").addEventListener("submit", e => {
   e.preventDefault();
+  console.log("entriesGlobal:", entriesGlobal);
   const title = document.querySelector("#input-title").value;
   const link = document.querySelector("#input-link").value;
   const category = document.querySelector("#input-category").value;
@@ -121,14 +195,9 @@ document.querySelector("#list-form").addEventListener("submit", e => {
     UI.showAlert("Please fill in all fields corectly", "danger");
   } else {
     const entry = new Entry(title, link, category, technology, year);
-    entriesGlobal.push(entry);
-
-    UI.addEntryToList(entry);
-
+    console.log(entry);
     Store.addEntry(entry);
-
-    UI.showAlert("Entry Added", "succes");
-
+    UI.showAlert("Entry Added", "primary");
     UI.clearFields();
   }
 });
@@ -139,7 +208,7 @@ document.querySelector("#list-show").addEventListener("click", e => {
   Store.removeEntry(
     e.target.parentElement.parentElement.firstElementChild.textContent
   );
-  UI.showAlert("Entry Removed", "succes");
+  UI.showAlert("Entry Removed", "primary");
 });
 
 //Save JSON
