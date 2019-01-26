@@ -29,7 +29,7 @@ class Entry {
 
 //UI Class
 class UI {
-  static displayResults(results) {
+  static displayResults(results, searchInput = 0) {
     var resultNumber = results.length;
     var pageIndex = 1;
     document.querySelectorAll(".removable").forEach(el => el.remove());
@@ -45,18 +45,19 @@ class UI {
         pageButton.dataset.pageNumber = pageIndex;
         pageButton.textContent = pageIndex;
         pageButton.addEventListener("click", function() {
-          UI.displayList(spliced[this.dataset.pageNumber]);
+          UI.displayList(spliced[this.dataset.pageNumber], searchInput);
         });
         liElement.appendChild(pageButton);
         pagination.insertBefore(liElement, pagination.lastElementChild);
         resultNumber = results.length;
         pageIndex++;
       }
-      UI.displayList(spliced[1]);
+      UI.displayList(spliced[1], searchInput);
     } else {
-      UI.displayList(results);
+      UI.displayList(results, searchInput);
     }
   }
+
   static findMatches(wordToMatch) {
     listShow.innerHTML = "";
     return Store.getEntries().filter(entry => {
@@ -64,28 +65,38 @@ class UI {
       return entry.title.match(regex) || entry.category.match(regex);
     });
   }
-  static displayList(listToShow) {
+
+  static displayList(listToShow, searchInput = 0) {
+    var titleHighlight;
+    var technologyHighlight;
     const list = document.querySelector("#list-show");
     if (window.innerWidth > 768) {
       const listTemplate = Array.from(listToShow)
         .map(entry => {
+          if (searchInput) {
+            const regex = new RegExp(searchInput, "gi");
+            titleHighlight = entry.title.replace(
+              regex,
+              `<strong class="text-primary">${searchInput}</strong>`
+            );
+            technologyHighlight = entry.category.replace(
+              regex,
+              `<strong class="text-primary">${searchInput}</strong>`
+            );
+          }
           return `
       <tr class="table-dark">
         <td>
-          <a href="${entry.link}">${entry.title}</a>
+          <a href="${entry.link}">${titleHighlight || entry.title}</a>
         </td>
         <td>${entry.category}</td>
-        <td>${entry.technology}</td>
+        <td>${technologyHighlight || entry.technology}</td>
         <td>${entry.year}</td>
         <td>
-          <button type="button" id="list-edit" class="badge badge-danger">
+          <button type="button" id="list-edit" class="badge badge-danger d-none">
             Edit
           </button>
-          <button
-            type="button"
-            id="list-delete"
-            class="badge badge-danger delete"
-          >
+          <button type="button" id="list-delete" class="badge badge-danger delete d-none">
             Delete
           </button>
         </td>
@@ -96,16 +107,27 @@ class UI {
     } else {
       const listTemplate = Array.from(listToShow)
         .map((entry, index) => {
+          if (searchInput) {
+            const regex = new RegExp(searchInput, "gi");
+            titleHighlight = entry.title.replace(
+              regex,
+              `<strong class="text-primary">${searchInput}</strong>`
+            );
+            technologyHighlight = entry.category.replace(
+              regex,
+              `<strong class="text-primary">${searchInput}</strong>`
+            );
+          }
           return `
           <tr data-toggle="collapse" data-target="#accordion${index}" class="table-dark clickable">
             <td>
-              <a href="${entry.link}">${entry.title}</a>
+              <a href="${entry.link}">${titleHighlight || entry.title}</a>
               <div id="accordion${index}" class="collapse">
                 <p>Category: ${entry.category}</p>
-                <p>Technologies: ${entry.technology}</p>
+                <p>Technologies: ${technologyHighlight || entry.technology}</p>
                 <p>Year: ${entry.year}</p>
-                <button type="button" id="list-edit" class="badge badge-danger">Edit</button>
-                <button type="button" id="list-delete" class="badge badge-danger delete">Delete</button>
+                <button type="button" id="list-edit" class="badge badge-danger d-none">Edit</button>
+                <button type="button" id="list-delete" class="badge badge-danger delete d-none">Delete</button>
               </div>
             </td>
           </tr>`;
@@ -114,6 +136,8 @@ class UI {
       list.innerHTML = listTemplate;
     }
   }
+
+  static editEntry(entry) {}
 
   static deleteEntry(entry) {
     if (entry.classList.contains("delete")) {
@@ -156,6 +180,10 @@ class Store {
     entriesGlobal.push(entry);
   }
 
+  static editEntry(entry) {
+    console.log("Store:", entry);
+  }
+
   static removeEntry(title) {
     const entries = Store.getEntries();
     entries.forEach((entry, index) => {
@@ -177,13 +205,12 @@ const searchForm = document.querySelector("#search-form");
 searchForm.addEventListener("submit", e => {
   e.preventDefault();
   const searchInput = document.querySelector("#search-input").value;
-  UI.displayResults(UI.findMatches(searchInput));
+  UI.displayResults(UI.findMatches(searchInput), searchInput);
 });
 
 //Event: Add Entry
 document.querySelector("#list-form").addEventListener("submit", e => {
   e.preventDefault();
-  console.log("entriesGlobal:", entriesGlobal);
   const title = document.querySelector("#input-title").value;
   const link = document.querySelector("#input-link").value;
   const category = document.querySelector("#input-category").value;
@@ -200,6 +227,16 @@ document.querySelector("#list-form").addEventListener("submit", e => {
     UI.showAlert("Entry Added", "primary");
     UI.clearFields();
   }
+});
+//Event: Edit Entry
+document.querySelector("#list-show").addEventListener("click", e => {
+  console.log("aa");
+  document.querySelector(".modal").classList.add("show");
+  /*
+  UI.editEntry(e.target);
+  Store.editEntry(
+    e.target.parentElement.parentElement.firstElementChild.textContent
+  );*/
 });
 
 //Event: Remove Entry

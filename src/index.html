@@ -18,7 +18,11 @@
   <body class="vh-100">
     <header class="header">
       <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Learning Sources</a>
+        <a
+          class="navbar-brand"
+          href="https://johnflowerbouquet.github.io/learning-sources/dist/index.html"
+          >Learning Sources</a
+        >
         <button
           class="navbar-toggler"
           type="button"
@@ -43,13 +47,17 @@
           </form>
           <button
             type="button"
-            class="btn btn-primary m-2"
+            class="btn btn-primary m-2 d-none"
             data-toggle="modal"
             data-target="#addEntry"
           >
             +Add Entry
           </button>
-          <button type="button" id="saveJSON" class="btn btn-primary m-2">
+          <button
+            type="button"
+            id="saveJSON"
+            class="btn btn-primary m-2 d-none"
+          >
             Download JSON
           </button>
         </div>
@@ -134,7 +142,7 @@
       </div>
     </div>
 
-    <main class="container-fluid mh-100 h-100 pt-5">
+    <main class="container mh-100 h-100 pt-5">
       <table class="table table-hover container-fluid h-75 mt-5">
         <thead>
           <tr class="table-header d-none d-md-table-row">
@@ -196,9 +204,10 @@
       </div>
     </main>
     <footer class="footer">
-      <p>jan.szczepanski@protonmail.com</p>
-      <p>Wrocław, Poland</p>
-      <span>Copyright &copy; by Jan Szczepański 2018</span>
+      <p class="text-center">
+        Made by
+        <a href="#"><span class="text-primary">Jan Szczepański</span></a>
+      </p>
     </footer>
     <script src="js/main.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
