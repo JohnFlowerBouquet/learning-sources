@@ -1,7 +1,7 @@
 //Entry Class
 var entriesGlobal;
 function getList() {
-  var entries = [];
+  let entries = [];
   const endpoint =
     "https://raw.githubusercontent.com/JohnFlowerBouquet/learning-sources/master/sources.json";
   fetch(endpoint)
@@ -30,13 +30,13 @@ class Entry {
 //UI Class
 class UI {
   static displayResults(results, searchInput = 0) {
-    var resultNumber = results.length;
-    var pageIndex = 1;
+    let resultNumber = results.length;
+    let pageIndex = 1;
     document.querySelectorAll(".removable").forEach(el => el.remove());
     if (resultNumber > 0) {
       var spliced = [[]];
       while (resultNumber > 0) {
-        var chunk = results.splice(0, 5);
+        const chunk = results.splice(0, 5);
         spliced.push(chunk);
         const liElement = document.createElement("li");
         liElement.className = "page-item removable";
@@ -86,17 +86,14 @@ class UI {
           }
           return `
       <tr class="table-dark">
-        <td>
+        <th scope="row">
           <a href="${entry.link}">${titleHighlight || entry.title}</a>
-        </td>
+        </th>
         <td>${entry.category}</td>
         <td>${technologyHighlight || entry.technology}</td>
         <td>${entry.year}</td>
         <td>
-          <button type="button" id="list-edit" class="badge badge-danger d-none">
-            Edit
-          </button>
-          <button type="button" id="list-delete" class="badge badge-danger delete d-none">
+          <button type="button" class="badge badge-danger d-none delete">
             Delete
           </button>
         </td>
@@ -105,6 +102,9 @@ class UI {
         .join("");
       list.innerHTML = listTemplate;
     } else {
+      document
+        .getElementById("searchButton")
+        .setAttribute("data-toggle", "collapse");
       const listTemplate = Array.from(listToShow)
         .map((entry, index) => {
           if (searchInput) {
@@ -126,8 +126,7 @@ class UI {
                 <p>Category: ${entry.category}</p>
                 <p>Technologies: ${technologyHighlight || entry.technology}</p>
                 <p>Year: ${entry.year}</p>
-                <button type="button" id="list-edit" class="badge badge-danger d-none">Edit</button>
-                <button type="button" id="list-delete" class="badge badge-danger delete d-none">Delete</button>
+                <button type="button" class="badge badge-danger d-none delete">Delete</button>
               </div>
             </td>
           </tr>`;
@@ -137,21 +136,65 @@ class UI {
     }
   }
 
-  static editEntry(entry) {}
+  static addEntry(entry) {
+    Store.addEntry(entry);
+    console.log("entry added");
+  }
 
-  static deleteEntry(entry) {
-    if (entry.classList.contains("delete")) {
-      entry.parentElement.parentElement.remove();
+  static deleteEntry(event) {
+    let link;
+    if (event.target.parentElement.classList.contains("collapse")) {
+      link = event.target.parentElement.parentElement.parentElement.firstElementChild.getAttribute(
+        "href"
+      );
+      event.target.parentElement.parentElement.parentElement.remove();
+    } else {
+      link = event.target.parentElement.parentElement.firstElementChild.getAttribute(
+        "href"
+      );
+      event.target.parentElement.parentElement.remove();
     }
+    console.log(link);
+    Store.removeEntry(link);
+  }
+
+  static showModal() {
+    var modalAnchorNode = document.createElement("a");
+    modalAnchorNode.setAttribute("data-toggle", "modal");
+    modalAnchorNode.setAttribute("data-target", "#modalAnchor");
+    document.body.appendChild(modalAnchorNode);
+    modalAnchorNode.click();
+    modalAnchorNode.remove();
+    var title = document.querySelector("#input-title").value;
+    var link = document.querySelector("#input-link").value;
+    var category = document.querySelector("#input-category").value;
+    var technology = document.querySelector("#input-technology").value;
+    var year = document.querySelector("#input-year").value;
+    document.querySelector("#modal-form").addEventListener("submit", e => {
+      e.preventDefault();
+      if (UI.validation(title, link, category, technology, year)) {
+        const entry = new Entry(title, link, category, technology, year);
+        UI.addEntry(entry);
+        UI.showAlert("Entry Added", "primary");
+        UI.clearFields();
+      } else {
+        UI.showAlert("Please fill in all fields corectly", "danger");
+      }
+    });
   }
 
   static showAlert(message, className) {
-    const div = document.createElement("div");
-    div.className = `alert alert-${className} mt-4`;
-    div.appendChild(document.createTextNode(message));
-    const form = document.querySelector("#list-form");
-    form.appendChild(div);
-    setTimeout(() => document.querySelector(".alert").remove(), 3000);
+    var time;
+    if (!document.querySelector(".alert")) {
+      const div = document.createElement("div");
+      div.className = `alert alert-${className} mt-4`;
+      div.appendChild(document.createTextNode(message));
+      const form = document.querySelector("#modal-form");
+      form.appendChild(div);
+      time = setTimeout(() => document.querySelector(".alert").remove(), 3000);
+    } else {
+      clearTimeout(time);
+    }
   }
 
   static clearFields() {
@@ -159,6 +202,14 @@ class UI {
     document.querySelector("#input-link").value = "";
     document.querySelector("#input-technology").value = "";
     document.querySelector("#input-year").value = "";
+  }
+
+  static validation(title, link, technology, year) {
+    if (title === "" || link === "" || technology === "" || year === "") {
+      return false;
+    } else {
+      return true;
+    }
   }
 }
 
@@ -180,85 +231,57 @@ class Store {
     entriesGlobal.push(entry);
   }
 
-  static editEntry(entry) {
-    console.log("Store:", entry);
-  }
-
-  static removeEntry(title) {
-    const entries = Store.getEntries();
-    entries.forEach((entry, index) => {
-      if (entry.title === title) {
-        entries.splice(index, 1);
+  static removeEntry(link) {
+    entriesGlobal.forEach((entry, index) => {
+      if (entry.link === link) {
+        entriesGlobal.splice(index, 1);
       }
     });
   }
+
+  static saveJSON() {
+    const data =
+      "data:text/json;charset=utf-8," +
+      encodeURIComponent(JSON.stringify(entriesGlobal));
+    var downloadAnchorNode = document.createElement("a");
+    downloadAnchorNode.setAttribute("href", data);
+    downloadAnchorNode.setAttribute("download", "sources" + ".json");
+    document.body.appendChild(downloadAnchorNode); // required for firefox
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+  }
 }
-//OnLoad
-document.addEventListener("DOMContentLoaded", () =>
-  UI.displayResults(Store.getEntries())
-);
+//Anchors
 const listShow = document.querySelector("#list-show");
 const pagination = document.querySelector("#pagination");
 
-//Event: Display Search Results
+listShow.addEventListener("click", e => {
+  if (e.target.classList.contains("delete")) {
+    UI.deleteEntry(e);
+  }
+});
+//Save JSON
+const JSONbutton = document.getElementById("saveJSON");
+JSONbutton.addEventListener("click", Store.saveJSON);
+//OnLoad
+document.addEventListener("DOMContentLoaded", () => {
+  UI.displayResults(Store.getEntries());
+});
+//Add Entry
+const addEntryButton = document.querySelector("#addEntryButton");
+addEntryButton.addEventListener("click", UI.showModal);
+
+//Event: Search
 const searchForm = document.querySelector("#search-form");
 searchForm.addEventListener("submit", e => {
   e.preventDefault();
   const searchInput = document.querySelector("#search-input").value;
-  UI.displayResults(UI.findMatches(searchInput), searchInput);
-});
-
-//Event: Add Entry
-document.querySelector("#list-form").addEventListener("submit", e => {
-  e.preventDefault();
-  const title = document.querySelector("#input-title").value;
-  const link = document.querySelector("#input-link").value;
-  const category = document.querySelector("#input-category").value;
-  const technology = document.querySelector("#input-technology").value;
-  const year = document.querySelector("#input-year").value;
-
-  //Validation
-  if (title === "" || link === "" || technology === "" || year === "") {
-    UI.showAlert("Please fill in all fields corectly", "danger");
+  if (searchInput == "admin") {
+    console.log("GODMODE ON");
+    document
+      .querySelectorAll(".d-none")
+      .forEach(item => item.tagName == "TR" || item.classList.remove("d-none"));
   } else {
-    const entry = new Entry(title, link, category, technology, year);
-    console.log(entry);
-    Store.addEntry(entry);
-    UI.showAlert("Entry Added", "primary");
-    UI.clearFields();
+    UI.displayResults(UI.findMatches(searchInput), searchInput);
   }
 });
-//Event: Edit Entry
-document.querySelector("#list-show").addEventListener("click", e => {
-  console.log("aa");
-  document.querySelector(".modal").classList.add("show");
-  /*
-  UI.editEntry(e.target);
-  Store.editEntry(
-    e.target.parentElement.parentElement.firstElementChild.textContent
-  );*/
-});
-
-//Event: Remove Entry
-document.querySelector("#list-show").addEventListener("click", e => {
-  UI.deleteEntry(e.target);
-  Store.removeEntry(
-    e.target.parentElement.parentElement.firstElementChild.textContent
-  );
-  UI.showAlert("Entry Removed", "primary");
-});
-
-//Save JSON
-function saveJSON() {
-  const data =
-    "data:text/json;charset=utf-8," +
-    encodeURIComponent(JSON.stringify(entriesGlobal));
-  var downloadAnchorNode = document.createElement("a");
-  downloadAnchorNode.setAttribute("href", data);
-  downloadAnchorNode.setAttribute("download", "sources" + ".json");
-  document.body.appendChild(downloadAnchorNode); // required for firefox
-  downloadAnchorNode.click();
-  downloadAnchorNode.remove();
-}
-const JSONbutton = document.getElementById("saveJSON");
-JSONbutton.addEventListener("click", saveJSON);

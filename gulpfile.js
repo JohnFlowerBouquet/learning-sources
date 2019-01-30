@@ -16,13 +16,7 @@ var uglify = require("gulp-uglify");
 //Browser
 var browserSync = require("browser-sync").create();
 //Variables
-var styleSRC = "./src/scss/main.scss";
-var styleURL = "./dist/css/";
-var mapURL = "./";
 
-var jsSRC = "./src/js/";
-var jsFront = "main.js";
-var jsFiles = [jsFront];
 var jsURL = "./dist/js/";
 
 var imgSRC = "./src/images/**/*";
@@ -50,12 +44,12 @@ function browser_sync() {
 }
 
 function reload(done) {
-  browserSync.reload();
+  browserSync.reload(done);
   done();
 }
 
 function css(done) {
-  src([styleSRC])
+  src("./src/scss/**/*")
     .pipe(sourcemaps.init())
     .pipe(
       sass({
@@ -71,36 +65,27 @@ function css(done) {
       })
     )
     .pipe(rename({ suffix: ".min" }))
-    .pipe(sourcemaps.write(mapURL))
-    .pipe(dest(styleURL))
+    .pipe(sourcemaps.write("./"))
+    .pipe(dest("./dist/css"))
     .pipe(browserSync.stream());
   done();
 }
 
 function js(done) {
-  return src("./src/js/main.js")
-    .pipe(rename({ extname: ".min.js" }))
+  return browserify({
+    extensions: [".js"],
+    entries: ["./src/js/app.js"],
+    debug: true
+  })
+    .transform(babelify, { presets: ["@babel/preset-env"] })
+    .bundle()
+    .pipe(source("main.min.js"))
+    .pipe(buffer())
+    .pipe(sourcemaps.init())
+    .pipe(uglify())
+    .pipe(sourcemaps.write("./maps"))
     .pipe(dest(jsURL))
     .pipe(browserSync.stream());
-  /*
-  jsFiles.map(function(entry) {
-    return (
-      browserify({
-        entries: [jsSRC + entry]
-      })
-        .transform(babelify, { presets: ["@babel/preset-env"] })
-        .bundle()
-        .pipe(source(entry))
-        .pipe(rename({ extname: ".min.js" }))
-        .pipe(buffer())
-        .pipe(sourcemaps.init({ loadMaps: true }))
-        .pipe(uglify())
-        .pipe(sourcemaps.write("."))
-        .pipe(dest(jsURL))
-        .pipe(browserSync.stream())
-    );
-  });
-  */
   done();
 }
 
