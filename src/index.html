@@ -15,8 +15,6 @@
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
     />
-
-    <link rel="stylesheet" href="css/main.min.css" />
     <title>Jan Szczepański Learning Sources</title>
   </head>
 
@@ -35,7 +33,7 @@
           data-target="#navbarColor02"
           aria-controls="navbarColor02"
           aria-expanded="false"
-          aria-label="Toggle navigation"
+          aria-label="Toggle search"
         >
           <i class="material-icons"> search </i>
         </button>
@@ -46,7 +44,7 @@
             class="justify-content-center align-items-center form-inline my-2 my-lg-0"
           >
             <input
-              id="search-input"
+              id="searchInput"
               class="form-control mr-sm-2"
               type="text"
               placeholder="e.g. javascript"
@@ -60,11 +58,7 @@
               Search
             </button>
           </form>
-          <button
-            type="button"
-            class="btn btn-primary m-2 d-none"
-            id="addEntryButton"
-          >
+          <button type="button" class="btn btn-primary m-2" id="addEntryButton">
             +Add Entry
           </button>
           <button
@@ -79,7 +73,7 @@
     </header>
     <div
       class="modal fade"
-      id="modalAnchor"
+      id="modal"
       tabindex="-1"
       role="dialog"
       aria-hidden="true"
@@ -106,6 +100,7 @@
                     class="form-control"
                     id="input-title"
                     placeholder="Title"
+                    name="title"
                   />
                 </div>
                 <div class="form-group">
@@ -114,11 +109,16 @@
                     class="form-control"
                     id="input-link"
                     placeholder="Link"
+                    name="link"
                   />
                 </div>
                 <div class="form-group">
                   <label for="input-category">Category</label>
-                  <select class="form-control" id="input-category">
+                  <select
+                    class="form-control"
+                    id="input-category"
+                    name="category"
+                  >
                     <option>Book</option>
                     <option>Article</option>
                     <option>Video</option>
@@ -131,6 +131,7 @@
                     class="form-control"
                     id="input-technology"
                     placeholder="Technologies"
+                    name="technology"
                   />
                 </div>
                 <div class="form-group">
@@ -139,6 +140,7 @@
                     class="form-control"
                     id="input-year"
                     placeholder="Year"
+                    name="year"
                   />
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -146,6 +148,7 @@
                   type="button"
                   class="btn btn-secondary"
                   data-dismiss="modal"
+                  id="closeModal"
                 >
                   Close
                 </button>
@@ -156,39 +159,45 @@
       </div>
     </div>
 
-    <main class="container mh-100 h-100 pt-5">
-      <table class="table table-hover container-fluid h-75 mt-5">
-        <thead>
-          <tr class="table-header d-none d-md-table-row">
-            <th class="col" scope="col">Title</th>
-            <th scope="col">Category</th>
-            <th scope="col">Technologies</th>
-            <th scope="col">Year</th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody id="list-show">
-        </tbody>
-      </table>
+    <main class="container h-100 pt-5">
+      <div class="h-75 bg-dark mt-5 mb-2">
+        <table class="table mh-100" id="accordion">
+          <thead class="thead-dark">
+            <tr class="table-header d-none d-md-table-row">
+              <th scope="col">#</th>
+              <th scope="col">Title</th>
+              <th scope="col">Category</th>
+              <th scope="col">Technologies</th>
+              <th scope="col">Year</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody id="list-show" class="h-100"></tbody>
+        </table>
+      </div>
       <div class="d-flex justify-content-center align-items-center">
         <ul class="pagination" id="pagination">
-          <li class="page-item disabled">
+          <li class="page-item" id="pagination_prev">
             <a class="page-link" href="#">&laquo;</a>
           </li>
-          <!--<li class="page-item active"><button class="page-link">1</button></li>-->
-          <li class="page-item disabled">
+          <li class="page-item" id="pagination_next">
             <a class="page-link" href="#">&raquo;</a>
           </li>
         </ul>
       </div>
     </main>
-    <footer class="footer">
+    <footer class="footer mt-2">
       <p class="text-center">
         Made by
-        <a href="#"><span class="text-primary">Jan Szczepański</span></a>
+        <a
+          href="https://johnflowerbouquet.github.io/"
+          target="_blank"
+          rel="noopener"
+          ><span class="text-primary">Jan Szczepański</span></a
+        >
       </p>
     </footer>
-    <script src="js/main.min.js"></script>
+    <script src="js/app.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   </body>
 </html>
