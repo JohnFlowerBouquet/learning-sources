@@ -1,4 +1,4 @@
-import { Entry, Store } from "../js/Store";
+import { Store } from "../js/Store";
 
 const testArr = [
   {
@@ -17,16 +17,6 @@ const testArr = [
     year: "2013/03"
   }
 ];
-
-test("Creates instance of Entry object with defined values", () => {
-  const entry = new Entry("title", "link", "category", "technology", "year");
-  expect(entry).toBeDefined();
-  expect(entry.title).toBe("title");
-  expect(entry.link).toBe("link");
-  expect(entry.category).toBe("category");
-  expect(entry.technology).toBe("technology");
-  expect(entry.year).toBe("year");
-});
 test("Returns array of objects", () => {
   const store = new Store(testArr);
   expect(store.getEntries()).toBeDefined();

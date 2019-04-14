@@ -9,7 +9,6 @@ export const utilities = {
   modal: document.getElementById("modal"),
 
   showModal() {
-    //Jeśli weryfikakcja potwierdzi wprowadzone dane to zwraca obiekt do app.js, który dalej przeekazuje go do Store i wywołuje display.
     const modalAnchorNode = document.createElement("a");
     modalAnchorNode.setAttribute("data-toggle", "modal");
     modalAnchorNode.setAttribute("data-target", "#modal");
@@ -27,7 +26,93 @@ export const utilities = {
     modalClose.click();
   },
   validateInput() {
+    const inputs = this.entry;
+    console.log(inputs);
+    for (const input in inputs) {
+      let value = inputs[input];
+      if (inputs.hasOwnProperty(input)) {
+        switch (input) {
+          case "title":
+            if (inputs[input].length < 5) {
+              this.showInputError(input);
+              return false;
+            } else {
+              this.clearInputError(input);
+            }
+            break;
+          case "link":
+            if (
+              !value.match(
+                /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%.+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%+.~#?&//=]*)/g
+              )
+            ) {
+              this.showInputError(input);
+              return false;
+            } else {
+              this.clearInputError(input);
+            }
+            break;
+          case "category":
+            if (value === "") {
+              this.showInputError(input);
+              return false;
+            } else {
+              this.clearInputError(input);
+            }
+            break;
+          case "technology":
+            if (value === "") {
+              this.showInputError(input);
+              return false;
+            } else {
+              this.clearInputError(input);
+            }
+            break;
+          case "year":
+            if (!value.match(/([12][90][0-9][0-9])\/([0][0-9]|[1][012])/)) {
+              this.showInputError(input);
+              return false;
+            } else {
+              this.clearInputError(input);
+            }
+            break;
+        }
+      }
+    }
     return true;
+  },
+  showInputError(inputName) {
+    const span = document.createElement("span");
+    span.classList.add("text-danger");
+    switch (inputName) {
+      case "title":
+        span.textContent = "Must be at least 5 characters long.";
+        break;
+      case "link":
+        span.textContent = "Insert proper URL address.";
+        break;
+      case "category":
+        span.textContent = "Choose one category.";
+        break;
+      case "technology":
+        span.textContent = "Write technologies separated by comma.";
+        break;
+      case "year":
+        span.textContent = "Enter date in YYYY/MM format.";
+        break;
+      default:
+        break;
+    }
+    const inputLabel = this.modal.querySelector(`[name="${inputName}"]`);
+    !inputLabel.parentElement.querySelector(".text-danger") &&
+      inputLabel.parentElement.appendChild(span);
+    inputLabel.focus();
+  },
+  clearInputError(inputName) {
+    const errorMsg = this.modal
+      .querySelector(`[name="${inputName}"]`)
+      .parentElement.querySelector(".text-danger");
+    errorMsg && errorMsg.remove();
   },
   getInput() {
     return this.entry;
@@ -44,42 +129,4 @@ export const utilities = {
       input.value = "";
     });
   }
-
-  /*
-  addEntry(entry) {
-    Store.addEntry(entry);
-    console.log("entry added");
-  },
-
-  deleteEntry(event) {
-    let link;
-    if (event.target.parentElement.classList.contains("collapse")) {
-      link = event.target.parentElement.parentElement.parentElement.firstElementChild.getAttribute(
-        "href"
-      );
-      event.target.parentElement.parentElement.parentElement.remove();
-    } else {
-      link = event.target.parentElement.parentElement.firstElementChild.getAttribute(
-        "href"
-      );
-      event.target.parentElement.parentElement.remove();
-    }
-    console.log(link);
-    Store.removeEntry(link);
-  },
-
-  clearFields() {
-    document.querySelector("#input-title").value = "";
-    document.querySelector("#input-link").value = "";
-    document.querySelector("#input-technology").value = "";
-    document.querySelector("#input-year").value = "";
-  },
-
-  validation(title, link, technology, year) {
-    if (title === "" || link === "" || technology === "" || year === "") {
-      return false;
-    } else {
-      return true;
-    }
-  }*/
 };

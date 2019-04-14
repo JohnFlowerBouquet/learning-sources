@@ -3,6 +3,7 @@ export const table = {
   _entriesPerPage: 5,
   _numOfPages: 1,
   _temporaryData: [],
+  _editMode: false,
 
   init(data) {
     this._temporaryData = data;
@@ -11,6 +12,9 @@ export const table = {
     this._currentPage = data.length < 1 ? 0 : 1;
     this.display();
     this.addPagination(data.length);
+  },
+  toggleEditMode() {
+    this._editMode = !this._editMode;
   },
 
   display(data = this._temporaryData) {
@@ -30,43 +34,71 @@ export const table = {
 
     const formated = dataPerPage.map((entry, index) => {
       if (window.innerWidth > 768) {
-        return `
+        return /*html*/ `
             <tr class="table-dark py-2">
             <th>${index + 1}</th>
               <td>
-                <a href="${entry.link}">${entry.title}</a>
+                <a href="${entry.link}" name="title">${entry.title}</a>
               </td>
               <td>${entry.category}</td>
               <td>${entry.technology}</td>
               <td>${entry.year}</td>
               <td>
-                <button type="button" class="badge badge-danger d-none delete">
-                  Delete
-                </button>
+              <div class="${table._editMode ? "d-block" : "d-none"}">
+                <button type="button" class="badge badge-danger delete">Delete</button>
+                <button type="button" class="badge badge-danger delete">Edit</button>
+                </div>
               </td>
             </tr>`;
       } else {
-        return `
-            <tr class="table-dark clickable" data-toggle="collapse" data-target="#accordion${index}" aria-controls="collapse${index}" aria-expanded="false">
+        return /*html*/ `
+          <tr
+            class="table-dark clickable"
+            data-toggle="collapse"
+            data-target="#accordion${index}"
+            aria-controls="collapse${index}"
+            aria-expanded="${index === 0 ? "true" : "false"}"
+          >
             <td class="py-3">
-                <p class="mb-0">${entriesPerPage * (currentPage - 1) +
-                  index +
-                  1}. ${entry.title}</p>
-                <div id="accordion${index}" class="collapse" data-parent="#accordion">
+              <p class="mb-0">
+                ${entriesPerPage * (currentPage - 1) + index + 1}.
+      <span name="title">${entry.title}</span>
+              </p>
+              <div
+                id="accordion${index}"
+                class="collapse ${index === 0 ? "show" : ""}"
+                data-parent="#accordion"
+              >
                 <p class="mb-0">Category: ${entry.category}</p>
                 <p class="mb-0">Technologies: ${entry.technology}</p>
                 <p class="mb-0">Year: ${entry.year}</p>
-                <p class="mb-0">Link: <a href="${entry.link}">${entry.title}</a>
-                <button type="button" class="badge badge-danger d-none delete">Delete</button>
+                <p class="mb-0">
+                  Link: <a href="${entry.link}">${entry.title}</a>
+                </p>
+                <div class="${table._editMode ? "d-block" : "d-none"}">
+                  <button type="button" class="badge badge-danger delete">
+                    Delete
+                  </button>
+                  <button type="button" class="badge badge-danger delete">
+                    Edit
+                  </button>
                 </div>
+              </div>
             </td>
-            </tr>`;
+          </tr>
+        `;
       }
     });
     list.innerHTML = formated.join("");
+    this._editMode &&
+      list
+        .querySelectorAll(".delete")
+        .forEach(btn =>
+          btn.addEventListener("click", e => console.log(e.target))
+        );
   },
   search(wordToMatch, data) {
-    const regex = new RegExp(wordToMatch, "gi");
+    const regex = new RegExp(wordToMatch, "i");
     const searchResults = JSON.parse(JSON.stringify(data))
       .filter(entry => {
         return entry.title.match(regex) || entry.technology.match(regex);
@@ -74,15 +106,20 @@ export const table = {
       .map(entry => {
         entry.title = entry.title.replace(
           regex,
-          `<strong class="text-primary">${wordToMatch}</strong>`
+          `<strong class="text-primary">${entry.title.match(regex)}</strong>`
         );
         entry.technology = entry.technology.replace(
           regex,
-          `<strong class="text-primary">${wordToMatch}</strong>`
+          `<strong class="text-primary">${entry.technology.match(
+            regex
+          )}</strong>`
         );
         return entry;
       });
     this.init(searchResults);
+  },
+  deleteEntry(entry) {
+    console.log(entry);
   },
   addPagination(numOfEntries) {
     const numPages = Math.ceil(numOfEntries / this._entriesPerPage);
@@ -135,18 +172,4 @@ export const table = {
       this.changePagination();
     }
   }
-  /*
-  showAlert(message, className) {
-    var time;
-    if (!document.querySelector(".alert")) {
-      const div = document.createElement("div");
-      div.className = `alert alert-${className} mt-4`;
-      div.appendChild(document.createTextNode(message));
-      const form = document.querySelector("#modal-form");
-      form.appendChild(div);
-      time = setTimeout(() => document.querySelector(".alert").remove(), 3000);
-    } else {
-      clearTimeout(time);
-    }
-  }*/
 };

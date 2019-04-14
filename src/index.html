@@ -30,15 +30,15 @@
           class="navbar-toggler btn-primary"
           type="button"
           data-toggle="collapse"
-          data-target="#navbarColor02"
-          aria-controls="navbarColor02"
+          data-target="#navbarCollapse"
+          aria-controls="navbarCollapse"
           aria-expanded="false"
           aria-label="Toggle search"
         >
           <i class="material-icons"> search </i>
         </button>
 
-        <div class="collapse navbar-collapse text-center" id="navbarColor02">
+        <div class="collapse navbar-collapse text-center" id="navbarCollapse">
           <form
             id="search-form"
             class="justify-content-center align-items-center form-inline my-2 my-lg-0"
@@ -51,20 +51,34 @@
             />
             <button
               class="btn btn-secondary m-2"
-              data-target="#navbarColor02"
+              data-target="#navbarCollapse"
               type="submit"
               id="searchButton"
             >
               Search
             </button>
           </form>
-          <button type="button" class="btn btn-primary m-2" id="addEntryButton">
+          <button
+            type="button"
+            class="btn btn-primary m-2"
+            id="addEntryButton"
+            data-target="#navbarCollapse"
+          >
             +Add Entry
           </button>
           <button
             type="button"
+            class="btn btn-primary m-2"
+            id="editModeButton"
+            data-target="#navbarCollapse"
+          >
+            Edit
+          </button>
+          <button
+            type="button"
             id="saveJSON"
-            class="btn btn-primary m-2 d-none"
+            class="btn btn-primary m-2"
+            data-target="#navbarCollapse"
           >
             Download JSON
           </button>
@@ -94,7 +108,7 @@
           <div class="modal-body">
             <form id="modal-form">
               <fieldset>
-                <div class="form-group">
+                <div class="form-group mb-1">
                   <label for="input-title">Title</label>
                   <input
                     class="form-control"
@@ -103,7 +117,7 @@
                     name="title"
                   />
                 </div>
-                <div class="form-group">
+                <div class="form-group mb-1">
                   <label for="input-link">Link</label>
                   <input
                     class="form-control"
@@ -112,7 +126,7 @@
                     name="link"
                   />
                 </div>
-                <div class="form-group">
+                <div class="form-group mb-1">
                   <label for="input-category">Category</label>
                   <select
                     class="form-control"
@@ -125,7 +139,7 @@
                     <option>Course</option>
                   </select>
                 </div>
-                <div class="form-group">
+                <div class="form-group mb-1">
                   <label for="input-technology">Technology</label>
                   <input
                     class="form-control"
@@ -143,14 +157,16 @@
                     name="year"
                   />
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">
+                  Submit
+                </button>
                 <button
                   type="button"
                   class="btn btn-secondary"
                   data-dismiss="modal"
                   id="closeModal"
                 >
-                  Close
+                  Cancel
                 </button>
               </fieldset>
             </form>
@@ -160,7 +176,7 @@
     </div>
 
     <main class="container h-100 pt-5">
-      <div class="h-75 bg-dark mt-5 mb-2">
+      <div class="mh-75 bg-dark mt-5 mb-2">
         <table class="table mh-100" id="accordion">
           <thead class="thead-dark">
             <tr class="table-header d-none d-md-table-row">
@@ -172,7 +188,7 @@
               <th scope="col"></th>
             </tr>
           </thead>
-          <tbody id="list-show" class="h-100"></tbody>
+          <tbody id="list-show" class="mh-100"></tbody>
         </table>
       </div>
       <div class="d-flex justify-content-center align-items-center">

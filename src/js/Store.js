@@ -17,12 +17,9 @@ export class Store {
     console.log(this._data);
   }
 
-  removeEntry(link) {
-    this._data.forEach((entry, index) => {
-      if (entry.link === link) {
-        this._data.splice(index, 1);
-      }
-    });
+  removeEntry(title) {
+    console.log(title);
+    this._data = this._data.filter(entry => entry.title !== title);
   }
 
   saveToJSON() {

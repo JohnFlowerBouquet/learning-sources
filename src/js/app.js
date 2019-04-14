@@ -12,10 +12,15 @@ const prev = document.getElementById("pagination_prev");
 const searchInput = document.getElementById("searchInput");
 const searchButton = document.getElementById("searchButton");
 const addEntryButton = document.getElementById("addEntryButton");
+const editModeButton = document.getElementById("editModeButton");
+const JSONbutton = document.getElementById("saveJSON");
 const modal = document.getElementById("modal");
 
 if (window.innerWidth < 768) {
   searchButton.setAttribute("data-toggle", "collapse");
+  addEntryButton.setAttribute("data-toggle", "collapse");
+  editModeButton.setAttribute("data-toggle", "collapse");
+  JSONbutton.setAttribute("data-toggle", "collapse");
 }
 
 searchButton.addEventListener("click", function(e) {
@@ -26,12 +31,31 @@ searchButton.addEventListener("click", function(e) {
 });
 next.addEventListener("click", table.nextPage);
 prev.addEventListener("click", table.prevPage);
+document.getElementById("modal-form").addEventListener("submit", onModalSubmit);
 
 addEntryButton.addEventListener("click", function() {
   utilities.showModal(); //Podajac rodzaj modulu?? Entry/Brak wynikow/statystyki
-  document
-    .getElementById("modal-form")
-    .addEventListener("submit", onModalSubmit);
+});
+
+editModeButton.addEventListener("click", function() {
+  //Delete Entry: add button -> addeventlistener -> confrim modal -> delete from view in table.js -> delete from base in Store.js
+  //utilities.confirmation()
+  //data.removeEntry(entryTitle)
+  table.toggleEditMode();
+  table.display();
+  document.addEventListener("click", e => {
+    console.log(
+      e.target.parentElement.parentElement.parentElement.querySelector(
+        '[name="title"]'
+      ).textContent
+    );
+    data.removeEntry(
+      e.target.parentElement.parentElement.parentElement.querySelector(
+        '[name="title"]'
+      ).textContent
+    );
+    table.display(data.getEntries());
+  });
 });
 
 function onModalSubmit(event) {
@@ -42,16 +66,17 @@ function onModalSubmit(event) {
     table.init(data.getEntries());
     utilities.closeModal();
   }
-  document
-    .getElementById("modal-form")
-    .removeEventListener("submit", onModalSubmit);
 }
+
+JSONbutton.addEventListener("click", data.saveToJSON);
+
 /*
 Clicks:
 Pagination: previous, next, pages
 Search: serach Button
 New Entry: inputs + submit
-Edit Entry: inputs get old data + submit + delete
+
+Edit Entry: add button -> add
 */
 /*function getList() {
   let entries = [];
