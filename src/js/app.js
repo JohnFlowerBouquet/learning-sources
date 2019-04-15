@@ -5,7 +5,6 @@ import { utilities } from "./utilities";
 const sourcesJSON = require("./sources.json");
 const data = new Store(sourcesJSON);
 
-(function() {})();
 table.init(data.getEntries());
 const next = document.getElementById("pagination_next");
 const prev = document.getElementById("pagination_prev");
@@ -14,7 +13,6 @@ const searchButton = document.getElementById("searchButton");
 const addEntryButton = document.getElementById("addEntryButton");
 const editModeButton = document.getElementById("editModeButton");
 const JSONbutton = document.getElementById("saveJSON");
-const modal = document.getElementById("modal");
 
 if (window.innerWidth < 768) {
   searchButton.setAttribute("data-toggle", "collapse");
@@ -29,42 +27,54 @@ searchButton.addEventListener("click", function(e) {
   table.search(searchInput.value, data.getEntries());
   searchInput.value = "";
 });
+
 next.addEventListener("click", table.nextPage);
 prev.addEventListener("click", table.prevPage);
-document.getElementById("modal-form").addEventListener("submit", onModalSubmit);
 
 addEntryButton.addEventListener("click", function() {
   utilities.showModal(); //Podajac rodzaj modulu?? Entry/Brak wynikow/statystyki
 });
+document.getElementById("modal-form").addEventListener("submit", onModalSubmit);
 
 editModeButton.addEventListener("click", function() {
-  //Delete Entry: add button -> addeventlistener -> confrim modal -> delete from view in table.js -> delete from base in Store.js
-  //utilities.confirmation()
-  //data.removeEntry(entryTitle)
   table.toggleEditMode();
   table.display();
-  document.addEventListener("click", e => {
-    console.log(
-      e.target.parentElement.parentElement.parentElement.querySelector(
-        '[name="title"]'
-      ).textContent
-    );
-    data.removeEntry(
-      e.target.parentElement.parentElement.parentElement.querySelector(
-        '[name="title"]'
-      ).textContent
-    );
-    table.display(data.getEntries());
-  });
+  if (table.isEditMode()) {
+    document.addEventListener("click", changeEntry);
+  } else {
+    document.removeEventListener("click", changeEntry);
+  }
 });
 
 function onModalSubmit(event) {
   event.preventDefault();
   if (utilities.validateInput()) {
-    data.addEntry(utilities.getInput());
+    table.isEditMode
+      ? data.editEntry(utilities.getInput())
+      : data.addEntry(utilities.getInput());
     utilities.clearInput();
     table.init(data.getEntries());
     utilities.closeModal();
+  }
+}
+
+function changeEntry(event) {
+  if (event.target.classList.contains("delete")) {
+    data.removeEntry(
+      event.target.parentElement.parentElement.parentElement.querySelector(
+        '[name="title"]'
+      ).textContent
+    );
+    table.init(data.getEntries());
+  }
+  if (event.target.classList.contains("edit")) {
+    const editedEntry = data.getEntry(
+      event.target.parentElement.parentElement.parentElement.querySelector(
+        '[name="title"]'
+      ).textContent
+    );
+    utilities.showModal(editedEntry);
+    //table.init(data.getEntries());
   }
 }
 
@@ -94,40 +104,3 @@ Edit Entry: add button -> add
       console.log(error);
     });
 }*/
-/*
-
-//Anchors
-const listShow = document.querySelector("#list-show");
-const pagination = document.querySelector("#pagination");
-
-listShow.addEventListener("click", e => {
-  if (e.target.classList.contains("delete")) {
-    UI.deleteEntry(e);
-  }
-});
-//Save JSON
-const JSONbutton = document.getElementById("saveJSON");
-JSONbutton.addEventListener("click", Store.saveJSON);
-//OnLoad
-document.addEventListener("DOMContentLoaded", () => {
-  UI.displayResults(Store.getEntries());
-});
-//Add Entry
-const addEntryButton = document.querySelector("#addEntryButton");
-addEntryButton.addEventListener("click", UI.showModal);
-
-//Event: Search
-const searchForm = document.querySelector("#search-form");
-searchForm.addEventListener("submit", e => {
-  e.preventDefault();
-  const searchInput = document.querySelector("#search-input").value;
-  if (searchInput == "admin") {
-    console.log("GODMODE ON");
-    document
-      .querySelectorAll(".d-none")
-      .forEach(item => item.tagName == "TR" || item.classList.remove("d-none"));
-  } else {
-    UI.displayResults(UI.findMatches(searchInput), searchInput);
-  }
-});
-*/

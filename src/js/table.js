@@ -16,6 +16,9 @@ export const table = {
   toggleEditMode() {
     this._editMode = !this._editMode;
   },
+  isEditMode() {
+    return this._editMode;
+  },
 
   display(data = this._temporaryData) {
     const list = document.querySelector("#list-show");
@@ -46,7 +49,7 @@ export const table = {
               <td>
               <div class="${table._editMode ? "d-block" : "d-none"}">
                 <button type="button" class="badge badge-danger delete">Delete</button>
-                <button type="button" class="badge badge-danger delete">Edit</button>
+                <button type="button" class="badge badge-danger edit">Edit</button>
                 </div>
               </td>
             </tr>`;
@@ -79,7 +82,7 @@ export const table = {
                   <button type="button" class="badge badge-danger delete">
                     Delete
                   </button>
-                  <button type="button" class="badge badge-danger delete">
+                  <button type="button" class="badge badge-danger edit">
                     Edit
                   </button>
                 </div>
@@ -90,12 +93,6 @@ export const table = {
       }
     });
     list.innerHTML = formated.join("");
-    this._editMode &&
-      list
-        .querySelectorAll(".delete")
-        .forEach(btn =>
-          btn.addEventListener("click", e => console.log(e.target))
-        );
   },
   search(wordToMatch, data) {
     const regex = new RegExp(wordToMatch, "i");
@@ -117,9 +114,6 @@ export const table = {
         return entry;
       });
     this.init(searchResults);
-  },
-  deleteEntry(entry) {
-    console.log(entry);
   },
   addPagination(numOfEntries) {
     const numPages = Math.ceil(numOfEntries / this._entriesPerPage);

@@ -8,7 +8,14 @@ export const utilities = {
   },
   modal: document.getElementById("modal"),
 
-  showModal() {
+  showModal(entry) {
+    this.clearInput();
+    if (entry) {
+      this.modal.querySelectorAll(".form-control").forEach(input => {
+        input.value = entry[input.name];
+        utilities.entry[input.name] = entry[input.name];
+      });
+    }
     const modalAnchorNode = document.createElement("a");
     modalAnchorNode.setAttribute("data-toggle", "modal");
     modalAnchorNode.setAttribute("data-target", "#modal");
@@ -27,7 +34,6 @@ export const utilities = {
   },
   validateInput() {
     const inputs = this.entry;
-    console.log(inputs);
     for (const input in inputs) {
       let value = inputs[input];
       if (inputs.hasOwnProperty(input)) {
