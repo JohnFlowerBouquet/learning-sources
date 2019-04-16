@@ -1,58 +1,79 @@
 [
   {
-    "title": "freeCodeCamp - Online Bootcamp",
-    "link": "https://www.freecodecamp.org/",
-    "category": "Courses",
-    "technology": ["JavaScript", "HTML", "CSS"],
-    "year": "Updated"
+    "title": "Code Realm - React / Material-UI",
+    "link": "https://www.youtube.com/playlist?list=PLcCp4mjO-z98WAu4sd0eVha1g-NMfzHZk",
+    "category": "Course",
+    "technology": "React",
+    "year": "2019/03"
   },
   {
-    "title": "javascriptissexy.com - Object Oriented JavaScript",
-    "link": "http://javascriptissexy.com/oop-in-javascript-what-you-need-to-know/",
-    "category": "Article",
-    "technology": ["JavaScript"],
-    "year": "2013/03"
-  },
-  {
-    "title": "Traversy Media - JavaScript BookList App | No Frameworks",
-    "link": "https://www.youtube.com/watch?v=JaMCxVWtW58",
+    "title": "udemy - Javascript Essentials Created by Lawrence Turton",
+    "link": "https://www.udemy.com/javascript-essentials/",
     "category": "Video",
-    "technology": ["JavaScript"],
-    "year": "2018/12"
+    "technology": "JavaScript",
+    "year": "2019/02"
   },
   {
-    "title": "JavaScript30",
+    "title": "freeCodeCamp - Front End Libraries Certification ",
+    "link": "https://learn.freecodecamp.org/",
+    "category": "Course",
+    "technology": "JavaScript, Bootstrap, jQuery, Sass, React, Redux",
+    "year": "2019/02"
+  },
+  {
+    "title": "Eloquent JavaScript 3rd edition",
+    "link": "http://eloquentjavascript.net/",
+    "category": "Book",
+    "technology": "JavaScript",
+    "year": "2019/02"
+  },
+  {
+    "title": "freeCodeCamp - Javascript Algorithms And Data Structures Certification",
+    "link": "https://learn.freecodecamp.org/",
+    "category": "Course",
+    "technology": "JavaScript",
+    "year": "2019/01"
+  },
+  {
+    "title": "freecodecamp - Responsive Web Design Certification",
+    "link": "https://learn.freecodecamp.org/",
+    "category": "Course",
+    "technology": "HTML,CSS",
+    "year": "2018/08"
+  },
+  {
+    "title": "wesbos - JavaScript30",
     "link": "https://javascript30.com/",
     "category": "Course",
-    "technology": ["JavaScript"],
-    "year": "2016/12"
+    "technology": "JavaScript",
+    "year": "2018/08"
   },
   {
-    "title": "codeacademy.com",
-    "link": "https://www.codecademy.com/learn",
+    "title": "codecademy - Introduction To JavaScript",
+    "link": "https://www.codecademy.com/learn/introduction-to-javascript",
     "category": "Course",
-    "technology": ["JavaScript", "HTML", "CSS"],
-    "year": "Updated"
+    "technology": "JavaScript",
+    "year": "2018/07"
   },
   {
-    "title": "Eloquent  JavaScript",
-    "link": "http://eloquentjavascript.net/index.html",
-    "category": "Book",
-    "technology": ["JavaScript"],
-    "year": "2018/12"
-  },
-  {
-    "title": "Programming 101",
-    "link": "https://www.udemy.com/programming-101/",
+    "title": "codecademy - Learn Responsive Design",
+    "link": "https://www.codecademy.com/learn/learn-responsive-design",
     "category": "Course",
-    "technology": ["Computer Science"],
-    "year": "2017/9"
+    "technology": "CSS",
+    "year": "2018/06"
   },
   {
-    "title": "JavaScript Essentials",
-    "link": "https://www.udemy.com/javascript-essentials/",
+    "title": "codecademy - Learn CSS",
+    "link": "https://www.codecademy.com/learn/learn-css",
     "category": "Course",
-    "technology": ["JavaScript"],
-    "year": "2017/12"
+    "technology": "CSS",
+    "year": "2018/05"
+  },
+  {
+    "title": "codecademy - Introduction to HTML",
+    "link": "https://www.codecademy.com/learn/learn-html",
+    "category": "Course",
+    "technology": "HTML",
+    "year": "2018/04"
   }
 ]

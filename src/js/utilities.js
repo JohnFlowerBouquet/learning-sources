@@ -7,6 +7,7 @@ export const utilities = {
     year: ""
   },
   modal: document.getElementById("modal"),
+  _isNewEntry: true,
 
   showModal(entry) {
     this.clearInput();
@@ -15,6 +16,9 @@ export const utilities = {
         input.value = entry[input.name];
         utilities.entry[input.name] = entry[input.name];
       });
+      this._isNewEntry = false;
+    } else {
+      this._isNewEntry = true;
     }
     const modalAnchorNode = document.createElement("a");
     modalAnchorNode.setAttribute("data-toggle", "modal");
@@ -31,6 +35,9 @@ export const utilities = {
   closeModal() {
     const modalClose = document.getElementById("closeModal");
     modalClose.click();
+  },
+  isNewEntry() {
+    return this._isNewEntry;
   },
   validateInput() {
     const inputs = this.entry;

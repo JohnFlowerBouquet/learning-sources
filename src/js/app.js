@@ -1,13 +1,9 @@
-//Entry Class
 import { Store } from "./Store";
 import { table } from "./table";
 import { utilities } from "./utilities";
-const sourcesJSON = require("./sources.json");
-const data = new Store(sourcesJSON);
+const data = new Store();
+data.fetchEntries().then(data => table.init(data));
 
-table.init(data.getEntries());
-const next = document.getElementById("pagination_next");
-const prev = document.getElementById("pagination_prev");
 const searchInput = document.getElementById("searchInput");
 const searchButton = document.getElementById("searchButton");
 const addEntryButton = document.getElementById("addEntryButton");
@@ -23,13 +19,11 @@ if (window.innerWidth < 768) {
 
 searchButton.addEventListener("click", function(e) {
   e.preventDefault();
+  console.log(data.getEntries());
   if (searchInput.value.length < 1) return table.init(data.getEntries());
   table.search(searchInput.value, data.getEntries());
   searchInput.value = "";
 });
-
-next.addEventListener("click", table.nextPage);
-prev.addEventListener("click", table.prevPage);
 
 addEntryButton.addEventListener("click", function() {
   utilities.showModal(); //Podajac rodzaj modulu?? Entry/Brak wynikow/statystyki
@@ -49,9 +43,9 @@ editModeButton.addEventListener("click", function() {
 function onModalSubmit(event) {
   event.preventDefault();
   if (utilities.validateInput()) {
-    table.isEditMode
-      ? data.editEntry(utilities.getInput())
-      : data.addEntry(utilities.getInput());
+    utilities.isNewEntry()
+      ? data.addEntry(utilities.getInput())
+      : data.editEntry(utilities.getInput());
     utilities.clearInput();
     table.init(data.getEntries());
     utilities.closeModal();
@@ -74,33 +68,6 @@ function changeEntry(event) {
       ).textContent
     );
     utilities.showModal(editedEntry);
-    //table.init(data.getEntries());
   }
 }
-
-JSONbutton.addEventListener("click", data.saveToJSON);
-
-/*
-Clicks:
-Pagination: previous, next, pages
-Search: serach Button
-New Entry: inputs + submit
-
-Edit Entry: add button -> add
-*/
-/*function getList() {
-  let entries = [];
-  const endpoint =
-    "https://raw.githubusercontent.com/JohnFlowerBouquet/learning-sources/master/sources.json";
-  fetch(endpoint)
-    .then(response => response.json())
-    .then(data => {
-      entries.push(...data);
-      UI.displayResults(data);
-      entriesGlobal = entries;
-      return entries;
-    })
-    .catch(error => {
-      console.log(error);
-    });
-}*/
+JSONbutton.addEventListener("click", () => data.saveJSON());

@@ -1,17 +1,10 @@
 export const table = {
-  _currentPage: 1,
-  _entriesPerPage: 5,
-  _numOfPages: 1,
   _temporaryData: [],
   _editMode: false,
 
   init(data) {
     this._temporaryData = data;
-    this._entriesPerPage = Math.floor((window.innerHeight * 0.75 - 36) / 80);
-    this._numOfPages = Math.ceil(data.length / this._entriesPerPage);
-    this._currentPage = data.length < 1 ? 0 : 1;
     this.display();
-    this.addPagination(data.length);
   },
   toggleEditMode() {
     this._editMode = !this._editMode;
@@ -22,20 +15,10 @@ export const table = {
 
   display(data = this._temporaryData) {
     const list = document.querySelector("#list-show");
-    const currentPage = this._currentPage;
-    const entriesPerPage = this._entriesPerPage;
-    if (data.length < 1) {
+    if (data.length < 1 || !data.length) {
       return (list.innerHTML = `<tr class="table-dark"><td class="text-center " colspan="6">Sorry, no results! Try other keywords!</td></tr>`);
     }
-    const dataPerPage = data.filter((entry, index) => {
-      return (
-        index >= (currentPage - 1) * entriesPerPage &&
-        index < currentPage * entriesPerPage &&
-        index < data.length
-      );
-    });
-
-    const formated = dataPerPage.map((entry, index) => {
+    const formated = data.map((entry, index) => {
       if (window.innerWidth > 768) {
         return /*html*/ `
             <tr class="table-dark py-2">
@@ -64,7 +47,7 @@ export const table = {
           >
             <td class="py-3">
               <p class="mb-0">
-                ${entriesPerPage * (currentPage - 1) + index + 1}.
+                ${index + 1}.
       <span name="title">${entry.title}</span>
               </p>
               <div
@@ -114,56 +97,5 @@ export const table = {
         return entry;
       });
     this.init(searchResults);
-  },
-  addPagination(numOfEntries) {
-    const numPages = Math.ceil(numOfEntries / this._entriesPerPage);
-    const pagination = document.getElementById("pagination");
-    pagination.querySelectorAll(".pageNum").forEach(item => item.remove());
-    for (let i = 1; i < numPages + 1; i++) {
-      const newPage = document.createElement("li");
-      newPage.innerHTML = `<li class="page-item pageNum ${i == 1 &&
-        "active"}"><a class="page-link pageNumLink" href="#">${i}</a></li>`;
-      pagination.insertBefore(newPage, pagination.childNodes[i + 1]);
-    }
-    pagination
-      .querySelectorAll(".pageNumLink")
-      .forEach(item => item.addEventListener("click", e => this.selectPage(e)));
-  },
-  changePagination() {
-    let pages = document.querySelectorAll(".pageNum");
-    let next = document.getElementById("pagination_next");
-    let prev = document.getElementById("pagination_prev");
-    for (let i = 0; i < pages.length; i++) {
-      if (i === this._currentPage - 1) {
-        pages[i].classList.add("active");
-      } else {
-        pages[i].classList.remove("active");
-      }
-    }
-    this._currentPage == 1
-      ? prev.classList.add("disabled")
-      : prev.classList.remove("disabled");
-    this._currentPage == this._numOfPages
-      ? next.classList.add("disabled")
-      : next.classList.remove("disabled");
-  },
-  selectPage(e) {
-    this._currentPage = e.target.textContent;
-    this.display();
-    this.changePagination();
-  },
-  prevPage() {
-    if (this._currentPage > 1) {
-      this._currentPage--;
-      this.display();
-      this.changePagination();
-    }
-  },
-  nextPage() {
-    if (this._currentPage < this._numOfPages) {
-      this._currentPage++;
-      this.display();
-      this.changePagination();
-    }
   }
 };
